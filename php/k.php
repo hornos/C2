@@ -176,7 +176,7 @@ function __k_exc( $e = NULL ) {
 // begin Kernel init
 function __k_init( $enc = 'UTF-8', $exc = NULL ) {
   __k_def( 'C2_STR_LENGTH', 32 );
-  __k_def( 'C2_STR_REGEXP', '[^[:alpha:]_.-]' );
+  __k_def( 'C2_STR_REGEXP', '[^[:alnum:]_.-]' );
   __k_def( 'C2_JSON_OBC', false );
   __k_def( 'C2_DEBUG_LEVEL', 9 );
   __k_def( 'C2_CLI', ( PHP_SAPI == 'cli' ? true : false ) );
