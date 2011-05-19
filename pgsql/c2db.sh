@@ -88,7 +88,10 @@ if test "${cmd}" = "i"; then
   done
 
   sp_f_yesno "I. Initialize the database?"
-  sp_f_pg "${PG_URL}" "${tmp}"
+  if test $? -gt 0 ; then
+    exit 1
+  fi
+  sp_f_pg "${PG_URL%%/*}/postgres" "${tmp}"
 
   timestamp=`date`
   echo -e "\n--\n-- ${timestamp}\n--" > "${tmp}"
@@ -106,5 +109,8 @@ if test "${cmd}" = "i"; then
   done
 
   sp_f_yesno "II. Setup the database?"
+  if test $? -gt 0 ; then
+    exit 1
+  fi
   sp_f_pg "${PG_URL}" "${tmp}"
 fi

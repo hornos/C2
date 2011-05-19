@@ -22,13 +22,13 @@
 --
 -- 3. Step: Allow cobra users to connect
 -- 3.1 modify pg_hba.conf
--- host		C2		se			127.0.0.1/32	md5
--- host		C2		gc			127.0.0.1/32	md5
--- host		C2		sys			127.0.0.1/32	md5
+-- host		c2		se			127.0.0.1/32	md5
+-- host		c2		gc			127.0.0.1/32	md5
+-- host		c2		sys			127.0.0.1/32	md5
 -- # Optional
--- host		C2		usr			127.0.0.1/32	md5
+-- host		c2		usr			127.0.0.1/32	md5
 -- # Optional lock down
--- host		C2		postgres	127.0.0.1/32	reject
+-- host		c2		postgres	127.0.0.1/32	reject
 -- 3.2 restart postgres
 --
 -- 4. Step: Reset the database (run this file on the db)
@@ -36,13 +36,18 @@
 --
 
 -- clean
-DROP DATABASE C2;
+DROP DATABASE IF EXISTS c2;
+
+DROP FUNCTION IF EXISTS _sec( varchar ) CASCADE;
+DROP FUNCTION IF EXISTS _time() CASCADE;
+DROP FUNCTION IF EXISTS _msec() CASCADE;
+DROP FUNCTION IF EXISTS _ts() CASCADE;
 
 -- users
-DROP USER se;
-DROP USER gc;
-DROP USER sys;
-DROP USER usr;
+DROP USER IF EXISTS se;
+DROP USER IF EXISTS gc;
+DROP USER IF EXISTS sysop;
+DROP USER IF EXISTS usrop;
 
 -- create the database
 CREATE DATABASE C2 WITH OWNER = postgres ENCODING = 'UTF8';
@@ -58,18 +63,18 @@ CREATE USER gc WITH PASSWORD 'tVK12eXwbnRy' NOCREATEDB NOCREATEUSER;
 -- VALID UNTIL ''
 
 -- cobra admin user
-CREATE USER sys WITH PASSWORD 'VkNUJ4BcBx8f' NOCREATEDB NOCREATEUSER;
+CREATE USER sysop WITH PASSWORD 'VkNUJ4BcBx8f' NOCREATEDB NOCREATEUSER;
 -- VALID UNTIL ''
 
 -- cobra general user
-CREATE USER usr WITH PASSWORD '3EGeB7GnhxHF' NOCREATEDB NOCREATEUSER;
+CREATE USER usrop WITH PASSWORD '3EGeB7GnhxHF' NOCREATEDB NOCREATEUSER;
 -- VALID UNTIL ''
 
 -- groups
-DROP GROUP sys;
-DROP GROUP app;
-DROP GROUP usr;
+DROP GROUP IF EXISTS sys;
+DROP GROUP IF EXISTS app;
+DROP GROUP IF EXISTS usr;
 
-CREATE GROUP sys WITH USER sys, se;
-CREATE GROUP app WITH USER sys, usr;
-CREATE GROUP usr WITH USER sys, usr;
+CREATE GROUP sys WITH USER sysop, se;
+CREATE GROUP app WITH USER sysop, usrop;
+CREATE GROUP usr WITH USER sysop, usrop;

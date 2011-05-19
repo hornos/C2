@@ -1,6 +1,6 @@
 -- Language
+DROP LANGUAGE IF EXISTS 'plpgsql' CASCADE;
 CREATE LANGUAGE 'plpgsql';
-
 
 -- Return seconds from now shifted by a time string
 CREATE OR REPLACE FUNCTION _sec( _shift varchar ) RETURNS int AS $$
