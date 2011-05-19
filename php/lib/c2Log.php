@@ -1,5 +1,7 @@
 <?php
+// Defines
 
+// Class
 class c2Log {
   private $__log;
 

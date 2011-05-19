@@ -86,7 +86,7 @@ function __k_fetch( $id = NULL ) {
   global $__k_ca;
 
   if( empty( $id ) || ! isset( $__k_ca[$id] ) )
-    throw new coEx( __FUNCTION__ . '::' . $id );
+    throw new c2Ex( __FUNCTION__ . '::' . $id );
 
   return $__k_ca[$id];
 }
@@ -95,7 +95,7 @@ function __k_store( $id = NULL, $v = NULL ) {
   global $__k_ca;
 
   if( empty( $id ) || empty( $v ) )
-    throw new coEx( __FUNCTION__ );
+    throw new c2Ex( __FUNCTION__ );
 
   $__k_ca[$id] = $v;
 
@@ -116,7 +116,7 @@ function __k_require( $class = NULL, $id = NULL ) {
   $c = unserialize( $c[0] );
 
   if( ! isset( $c[$class] ) )
-    throw new coEx( __FUNCTION__ . '::' . $class . '::' . $id );
+    throw new c2Ex( __FUNCTION__ . '::' . $class . '::' . $id );
 
   return require_once( $c[$class] );
 }
@@ -134,7 +134,7 @@ function __k_autoload( $class = NULL, $id = NULL ) {
         return __k_require( $class, $id );
       } catch( Exception $e ) {}
     }
-    throw new coEx( __FUNCTION__ . '::' . $class . '::' . $id );
+    throw new c2Ex( __FUNCTION__ . '::' . $class . '::' . $id );
   }
 }
 
@@ -198,7 +198,7 @@ function __k_init( $enc = 'UTF-8', $exc = NULL ) {
 // end Kernel init
 
 
-class coEx extends Exception {
+class c2Ex extends Exception {
   public function __construct( $e = NULL ) {
     parent::__construct( empty( $e ) ? __METHOD__ : $e );
   }
@@ -210,7 +210,7 @@ class c2 implements ArrayAccess {
 
   public function __construct( $c2 = NULL, $cfg = NULL ) {
     if( empty( $c2 ) || empty( $cfg ) )
-      throw new coEx( __METHOD__ );
+      throw new c2Ex( __METHOD__ );
 
     $this->__c2 = $c2;
     $this->cfg( $cfg );
@@ -241,13 +241,13 @@ class c2 implements ArrayAccess {
     if( isset( $this->__c2[$offset] ) )
       return $this->__c2[$offset];
 
-    throw new coEx( __METHOD__ );
+    throw new c2Ex( __METHOD__ );
   }
   // end ArrayAccess interface
 
   public function cfg( $cfg = NULL ) {
     if( empty( $cfg ) )
-      throw new coEx( __METHOD__ );
+      throw new c2Ex( __METHOD__ );
 
     if( empty( $this->__c2['sys.c'] ) )
       $this->__c2['sys.c'] = $cfg;
@@ -258,7 +258,7 @@ class c2 implements ArrayAccess {
 
   public function cache( $id = NULL, $path = NULL ) {
     if( empty( $id ) || empty( $path ) )
-      throw new coEx( __METHOD__ . '::' . $id . '::' . $path );
+      throw new c2Ex( __METHOD__ . '::' . $id . '::' . $path );
 
     $ca = array( $id => array( 'path' => $path ) );
     if( isset( $this->__c2['sys.cache'] ) )
@@ -270,12 +270,12 @@ class c2 implements ArrayAccess {
 
   function boot( $app = NULL ) {
     if( empty( $app ) || ! isset( $this->__c2['path.app'] ) )
-      throw new coEx( __METHOD__ . '::' . $app );
+      throw new c2Ex( __METHOD__ . '::' . $app );
 
     $app = __k_str( $app );
     $app_h = $this->__c2['path.app'] . '/' . $app . '/h.php';
     if( ! is_readable( $app_h ) )
-      throw new coEx( __METHOD__ . '::' . $app_h );
+      throw new c2Ex( __METHOD__ . '::' . $app_h );
 
     require_once( $app_h );
 
