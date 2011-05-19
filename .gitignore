@@ -1,4 +1,7 @@
 .DS*
 *.old
 tmp.*
+php/cache/*.php
+php/log/*.log
+
 
