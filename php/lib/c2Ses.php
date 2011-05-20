@@ -1,10 +1,6 @@
 <?php
 
 __k_def( 'C2_SES_LENGTH', 128 );
-# __k_define( 'COBRA_SESSION_DEBUG_LEVEL', 9 );
-# __k_define( 'COBRA_SESSION_ID_ON_CLIENT', true );
-# __k_define( 'COBRA_SESSION_STORE_EXTINFO', false );
-
 
 class c2Ses extends c2DB {
   // time cache
@@ -125,7 +121,7 @@ class c2Ses extends c2DB {
     try {
       $r = $this->Proc( 'se_x', array( $s ) );
     } catch( Exception $e ) {
-      throw new coSesEx( __METHOD__ );
+      throw new c2Ex( __METHOD__ );
     }
     return $r;
   }
@@ -143,7 +139,7 @@ class c2Ses extends c2DB {
   }
 
   // Session
-  protected function _change() {
+  protected function _chg() {
     $os = session_id();
     $ns = $this->_gen();
 
@@ -154,16 +150,16 @@ class c2Ses extends c2DB {
     }
     session_id( $ns );
     $this->_new();
-    $this->save( 'ctime', $this->_time );
+    $this->save( 'ctm', $this->_time );
     return true;
   }
 
-  protected function _check() {
+  protected function _chk() {
     if( $this->_x() == 0 )
       return true;
-    $dtime = $this->_time - $this->load( 'ctime' );
-    if( $dtime > $this->_x() ) {
-      return $this->_change();
+    $dt = $this->_time - $this->load( 'ctm' );
+    if( $dt > $this->_x() ) {
+      return $this->_chg();
     }
     return false;
   }
@@ -204,117 +200,86 @@ class c2Ses extends c2DB {
     throw new coSessionException( __METHOD__ . ' ' . $i );
   }
 
-
   // Top Level Read and Write Session Data with Encryption
-  public function save( $id, $data = false ) {
+  public function save( $i = NULL, $d = NULL ) {
     try {
-      $key = $this->_session_key();
-	} catch( Exception $e ) {
-	  // store data unencrypted
-	  return $this->_set( $id, serialize( $data ) );
-	}
-	// store data encrypted
-	$id   = coCrypt::encrypt( serialize( $id ), $key );
-	$data = coCrypt::encrypt( serialize( $data ), $key );
-	return $this->_set( $id, $data );
-  }
-
-
-  public function load( $id ) {
-    try {
-      $key = $this->_session_key();
-	} catch( Exception $e ) {
-	  // load data unencrypted
-	  $result = unserialize( $this->_get( $id ) );
-	  return $result;
-	}
-	// load data encrypted
-	$id   = coCrypt::encrypt( serialize( $id ), $key );
-	$data = coCrypt::decrypt( $this->_get( $id ), $key );
-	$result = unserialize( $data );
-	return $result;
-  }
-
-
-  public function erase( $id ) {
-    try {
-      $key = $this->_session_key();
-	} catch( Exception $e ) {
-	  return $this->_del( $id );
+      $k = $this["se.key"];
+    } catch( Exception $e ) {
+      return $this->_set( $i, serialize( $d ) );
     }
-	$id = coCrypt::encrypt( serialize( $id ), $key );
-	return $this->_del( $id );	
+    $i = c2Enc::enc( serialize( $i ), $k );
+    $d = c2Enc::enc( serialize( $d ), $k );
+    return $this->_set( $i, $d );
   }
-  
-  
-  //
-  // Start and Stop the Cobra Session
-  //
+
+  public function load( $i = NULL ) {
+    try {
+      $k = $this["se.key"];
+    } catch( Exception $e ) {
+      return unserialize( $this->_get( $i ) );
+    }
+    $i = c2Enc::enc( serialize( $i ), $k );
+    $d = c2Enc::dec( $this->_get( $i ), $k );
+    return unserialize( $d );
+  }
+
+  public function erase( $i = NULL ) {
+    try {
+      $k = $this["se.key"];
+    } catch( Exception $e ) {
+      return $this->_del( $i );
+    }
+    $i = coCrypt::enc( serialize( $i ), $k );
+    return $this->_del( $i );
+  }
 
   public function start() {
     // connect to the db
     $this->Connect();
-	// get the time
-	$this->_time      = $this->time();
-	$this->_microtime = $this->microtime();
-	
-	// set session name in the cookie
-    session_name( $this->_session_name() );
-	// start or continue the session
+    $this->_time = $this->time();
+    $this->_msec = $this->microtime();
+    // start or continue the session
+    session_name( $this["se.name"] );
     session_start();
 
     try {
-	  $this->_expired();
-	} catch( Exception $e ) {
-	  // coDebug::message( 'Start a new session' );
-	  // expired or no such sessions therefore
-	  // start a new session, generate and set the session id
-	  session_id( $this->_generate_id() );
-	  // store session data
-	  $this->save( 'last_id_change_time', $this->_time );
-
-      // store date for strict session checking
-      if( $this->_strict_client_check() ) {	  
-	    $this->save( 'ip_address', $this->_remote_addr() );
-	    $this->save( 'user_agent', $this->_http_user_agent() );
-	  }
-	  // reset session cookie id and time
-	  $this->_renew_cookie();
-	  return true;
-	}
+      $this->_x();
+    } catch( Exception $e ) {
+      session_id( $this->_gen() );
+      $this->save( 'ctm', $this->_time );
+      $this->save( 'rip', $this->_rip() );
+      $this->save( 'hua', $this->_hua() );
+      // reset session cookie id and time
+      $this->_new();
+      return true;
+    }
 
     // continue an old session
-	// coDebug::message( 'Continue old session' );
-	if( $this->_strict_client_check() ) {
-      // check ip address
-	  $this->_check_client_ip();	  
-	  // check user agent
-	  $this->_check_client_user_agent();
-    }
-	// if needed regenerate session id
-	$this->_check_change_id();
-	return true;
-  } // end start
+    // check ip address
+    $this->_client();
+    // check user agent
+    $this->_agent();
+    // generate session id
+    $this->_chk();
+    return true;
+  }
 
+  public function stop( $s = true ) {
+    $this->Connect();
+    session_name( $this["se.name"] );
+    if( $s )
+      session_start();
 
-  public function stop( $start_session = true ) {
-    // connect to the db
-    $this->Connect();	
-	// set session name in the cookie
-    session_name( $this->_session_name() );
-	// start or continue the session
-	
-    if( $start_session ) session_start();
-
+    session_destroy();
+/*
     try {
-	  $this->_expired();
-	} catch( Exception $e ) {
-      session_destroy();
-      return false;
+      $this->_x();
+    } catch( Exception $e ) {
+      return session_destroy();
     }
     return session_destroy();
-  }  
-
-} // end coSession
+*/
+  }
+}
 
 ?>

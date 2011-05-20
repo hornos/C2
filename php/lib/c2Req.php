@@ -13,7 +13,7 @@ class c2Req {
       unset( $_{C2_REQ_TYPE}[$id] );
 
     if( $s && ! empty( $v ) )
-      $v = c2Str::trunc( c2Str::alnum( $v ) $l );
+      $v = c2Str::trunc( c2Str::alnum( $v ), $l );
 
     return $v;
   }
