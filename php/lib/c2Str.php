@@ -35,7 +35,7 @@ class c2Str {
     $i = 1;
     $s = '';
     foreach( $arr as $a ) {
-      $s .= ( $sql ? self::sqlf( $a ) : $a );
+      $s .= ( $sql ? self::sql( $a ) : $a );
       if( $i < $l )
         $s .= ',';
       ++$i;

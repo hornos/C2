@@ -33,7 +33,7 @@ class c2Req {
     echo json_encode( $j );
   }
 
-  public static function jres( $d = NULL, $t = 'r', $s = 0 ) {
+  public static function jre( $d = NULL, $t = 'r', $s = 0 ) {
     if( $s > 0 )
       sleep( $s );
 
@@ -41,7 +41,7 @@ class c2Req {
   }
 
   public static function jex( $e = NULL ) {
-    return self::jres( $e->getMessage(), 'e' );
+    return self::jre( $e->getMessage(), 'e' );
   }
 }
 

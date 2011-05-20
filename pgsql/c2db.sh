@@ -53,6 +53,10 @@ if ! test -f "${app_db}" ; then
 fi
 . ${app_db}
 
+sp_f_yesno "Continue?"
+if test $? -gt 0 ; then
+  exit 1
+fi
 
 # login
 # ------------------------------------------------
@@ -95,6 +99,19 @@ if test "${cmd}" = "i"; then
 
   timestamp=`date`
   echo -e "\n--\n-- ${timestamp}\n--" > "${tmp}"
+
+  for i in "func" ; do
+    it="${i}.sql"
+    if test -r "${it}" ; then
+      echo -e "\n--\n-- ${it}\n--" >> "${tmp}"
+      cat "${it}"                  >> "${tmp}"
+    fi
+    it="${i}.grant.sql"
+    if test -r "${it}" ; then
+      echo -e "\n--\n-- ${it}\n--" >> "${tmp}"
+      cat "${it}"                  >> "${tmp}"
+    fi
+  done
 
   for i in ${PG_TABLES[@]} ; do
     for t in ${ttinit[@]} ; do

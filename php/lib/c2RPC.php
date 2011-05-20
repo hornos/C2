@@ -3,22 +3,22 @@
 class c2RPC {
   public function __construct() { }
 
-  protected function _rpc( $m = NULL, $argv = NULL ) {
+  protected function _rpc( $m = NULL, $a = NULL ) {
     if( ! method_exists( $this, $m ) )
-      throw new c2Ex( __CLASS__ . '::' . $method );
+      throw new c2Ex( __CLASS__ . '::' . $m );
 
-    return empty( $argv ) ? $this->$m() : $this->$m( $argv );
+    return empty( $a ) ? $this->$m() : $this->$m( $a );
   }
 
   protected function _rpc_test() {
-    return __METHOD__ . ' OK';
+    return 'OK';
   }
 
-  public function rpc( $m = NULL, $argv = NULL ) {
+  public function rpc( $m = NULL, $a = NULL ) {
     if( empty( $m ) )
       throw new c2Ex( __METHOD__ );
 
-    return $this->_rpc( '_rpc_' . $m, $argv );
+    return $this->_rpc( '_rpc_' . $m, $a );
   }
 }
 

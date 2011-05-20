@@ -2,7 +2,7 @@
 
 __k_def( 'C2_SES_LENGTH', 128 );
 
-class c2Ses extends c2DB {
+class c2Ses extends c2PDB {
   // time cache
   protected $_time;
   protected $_msec;
@@ -69,10 +69,9 @@ class c2Ses extends c2DB {
   public function write( $s = NULL, $d = NULL ) {
     /*! Session interface */
     $s = $this->_s( $s );
-    $x = $this->["se.x"];
-    $a = array( $s, $x, $d );
+    $x = $this["se.x"];
     try {
-      $this->Proc( 'se_wr', $a );
+      $this->Proc( 'se_wr', array( $s, $x, $d ) );
     } catch( Exception $e ) {
       __k_debug( __METHOD__ . '::' . $e->getMessage() );
       return false;
