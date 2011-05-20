@@ -59,7 +59,7 @@ class c2Ses extends c2PDB {
     try {
       $r = $this->Proc( 'se_rd', array( $this->_s( $s ) ) );
     } catch( Exception $e ) {
-      __k_debug( __METHOD__ . '::' . $e->getMessage() );
+      // __k_debug( __METHOD__ . '::' . $e->getMessage() );
       return false;
     }
     return $r;
@@ -73,7 +73,7 @@ class c2Ses extends c2PDB {
     try {
       $this->Proc( 'se_wr', array( $s, $x, $d ) );
     } catch( Exception $e ) {
-      __k_debug( __METHOD__ . '::' . $e->getMessage() );
+      // __k_debug( __METHOD__ . '::' . $e->getMessage() );
       return false;
     }
     return true;
@@ -87,7 +87,7 @@ class c2Ses extends c2PDB {
     try {
       $this->Proc( 'se_de', array( $s ) );
     } catch( Exception $e ) {
-      __k_debug( __METHOD__ . '::' . $e->getMessage() );
+      // __k_debug( __METHOD__ . '::' . $e->getMessage() );
       return false;
     }
     return true;
@@ -132,9 +132,9 @@ class c2Ses extends c2PDB {
   }
 
   protected function _new() {
-    $x = $this->_time + $this->_x();
+    $x = $this->_time + $this["se.x"];
     unset( $_COOKIE[session_name()] );
-    setcookie( session_name(), session_id(), $x );
+    setcookie( session_name(), session_id(), $x);
   }
 
   // Session
@@ -154,10 +154,10 @@ class c2Ses extends c2PDB {
   }
 
   protected function _chk() {
-    if( $this->_x() == 0 )
+    if( $this["se.x"] == 0 )
       return true;
     $dt = $this->_time - $this->load( 'ctm' );
-    if( $dt > $this->_x() ) {
+    if( $dt > $this["se.x"] ) {
       return $this->_chg();
     }
     return false;
@@ -196,7 +196,7 @@ class c2Ses extends c2PDB {
     if( isset( $_SESSION[$i] ) )
       return $_SESSION[$i];
 
-    throw new coSessionException( __METHOD__ . ' ' . $i );
+    throw new c2Ex( __METHOD__ . ' ' . $i );
   }
 
   // Top Level Read and Write Session Data with Encryption
@@ -269,15 +269,7 @@ class c2Ses extends c2PDB {
     if( $s )
       session_start();
 
-    session_destroy();
-/*
-    try {
-      $this->_x();
-    } catch( Exception $e ) {
-      return session_destroy();
-    }
     return session_destroy();
-*/
   }
 }
 

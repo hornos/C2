@@ -111,6 +111,7 @@ class c2PDB implements ArrayAccess {
   protected function _Query( $q = NULL, $s = true ) {
     $c = $this->_getcon();
 
+    // __k_prn( $q );
     if( empty( $q ) )
       throw new c2Ex( __METHOD__ );
 
