@@ -1,0 +1,7 @@
+button.sbtn {
+  background-image: url("sbtn.png");
+  background-color: transparent;
+  border: 0px solid white;
+  height: 12px;
+  width: 40px;
+}
