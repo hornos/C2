@@ -17,7 +17,22 @@ class c2UAC extends c2RPC {
     return $se->stop();
   }
 
-  public function rpc( $m = NULL, $a = NULL ) {
+  protected function _rpc_login() {
+    $u = c2Req::get( 'u' );
+    $p = c2Req::get( 'p' );
+    if( empty( $u ) )
+      throw new c2Ex( 'Empty user!' );
+    if( empty( $p ) )
+      throw new c2Ex( 'Empty password!' );
+    return true;
+  }
+
+  protected function _rpc_logout() {
+    return true;
+  }
+
+  public function rpc( $m = NULL, $a = NULL, $s = true ) {
+    // TODO: auth ( s - secure )
     try {
       $d = parent::rpc( $m, $a );
     } catch( Exception $e ) {
