@@ -201,9 +201,8 @@ class c2Ses extends c2PDB {
 
   // Top Level Read and Write Session Data with Encryption
   public function save( $i = NULL, $d = NULL ) {
-    try {
-      $k = $this["se.k"];
-    } catch( Exception $e ) {
+    $k = $this["se.k"];
+    if( empty( $k ) ) {
       return $this->_set( $i, serialize( $d ) );
     }
     $i = c2Enc::enc( serialize( $i ), $k );
@@ -212,9 +211,8 @@ class c2Ses extends c2PDB {
   }
 
   public function load( $i = NULL ) {
-    try {
-      $k = $this["se.k"];
-    } catch( Exception $e ) {
+    $k = $this["se.k"];
+    if( empty( $k ) ) {
       return unserialize( $this->_get( $i ) );
     }
     $i = c2Enc::enc( serialize( $i ), $k );
@@ -228,7 +226,7 @@ class c2Ses extends c2PDB {
     } catch( Exception $e ) {
       return $this->_del( $i );
     }
-    $i = coCrypt::enc( serialize( $i ), $k );
+    $i = c2Enc::enc( serialize( $i ), $k );
     return $this->_del( $i );
   }
 

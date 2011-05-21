@@ -2,20 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>jQuery demo</title>
+  <title>Session Demo</title>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 </head>
 
 <body>
-  <a href="#">START</a>
-  <a href="#">STOP</a>
-
   <!-- libs -->
+  <script src="lib/c2/c2.js"></script>
+
   <script src="lib/sbtn/sbtn.js"></script>
   <link href="lib/sbtn/sbtn.css" rel="stylesheet" type="text/css">
 
+  <a href="#" id="start">START</a>
+   | 
+  <a href="#" id="stop">STOP</a>
+   | 
+  <a href="#" id="test">TEST</a>
+
+  <script>
+    $('#start').click( function(e) { _start(); } );
+    $('#stop').click( function(e) { _stop(); } );
+    $('#test').click( function(e) { _test(); } );
+  </script>
+
   <!-- objs -->
-  <button id="onoff" class="sbtn" value="on">
+  <div><button id="onoff" class="sbtn" value="on"></div>
   <script>
     var onoff = new sbtn("#onoff");
     $("#onoff").click(function(){onoff.click();});

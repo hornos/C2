@@ -10,14 +10,14 @@ class c2Str {
   public function __construct() { }
 
   public static function lower( $s = '' ) {
-    return COBRA_MB ? mb_strtolower( $s ) : strtolower( $s);
+    return C2_MB ? mb_strtolower( $s ) : strtolower( $s);
   }
 
-  public static function trunc( $s = '', $l = COBRA_STR_LENGTH ) {
+  public static function trunc( $s = '', $l = C2_STR_LENGTH ) {
     if( $l == 0 )
       return $s;
 
-    return COBRA_MB ? mb_substr( trim( $s ), 0, $l ) : substr( trim( $s ), 0, $l );
+    return C2_MB ? mb_substr( trim( $s ), 0, $l ) : substr( trim( $s ), 0, $l );
   }
 
   public static function sql( $s = '' ) {

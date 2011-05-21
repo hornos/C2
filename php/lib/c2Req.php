@@ -8,9 +8,11 @@ class c2Req {
   public function __construct() { }
 
   public static function req( $id = NULL, $def = NULL, $c = true, $s = true, $l = C2_REQ_LENGTH ) {
-    $v = ( ! isset($_{C2_REQ_TYPE}[$id] ) or $_{C2_REQ_TYPE}[$id] == '' ) ? $def : $_{C2_REQ_TYPE}[$id];
+    $t = "_" . C2_REQ_TYPE;
+    global ${$t};
+    $v = ( ! isset( ${$t}[$id] ) or ${$t}[$id] == '' ) ? $def : ${$t}[$id];
     if( $c )
-      unset( $_{C2_REQ_TYPE}[$id] );
+      unset( ${$t}[$id] );
 
     if( $s && ! empty( $v ) )
       $v = c2Str::trunc( c2Str::alnum( $v ), $l );
