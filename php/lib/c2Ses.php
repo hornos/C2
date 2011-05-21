@@ -202,7 +202,7 @@ class c2Ses extends c2PDB {
   // Top Level Read and Write Session Data with Encryption
   public function save( $i = NULL, $d = NULL ) {
     try {
-      $k = $this["se.key"];
+      $k = $this["se.k"];
     } catch( Exception $e ) {
       return $this->_set( $i, serialize( $d ) );
     }
@@ -213,7 +213,7 @@ class c2Ses extends c2PDB {
 
   public function load( $i = NULL ) {
     try {
-      $k = $this["se.key"];
+      $k = $this["se.k"];
     } catch( Exception $e ) {
       return unserialize( $this->_get( $i ) );
     }
@@ -224,7 +224,7 @@ class c2Ses extends c2PDB {
 
   public function erase( $i = NULL ) {
     try {
-      $k = $this["se.key"];
+      $k = $this["se.k"];
     } catch( Exception $e ) {
       return $this->_del( $i );
     }
@@ -238,7 +238,7 @@ class c2Ses extends c2PDB {
     $this->_time = $this->time();
     $this->_msec = $this->microtime();
     // start or continue the session
-    session_name( $this["se.name"] );
+    session_name( $this["se.s"] );
     session_start();
 
     try {
@@ -265,7 +265,7 @@ class c2Ses extends c2PDB {
 
   public function stop( $s = true ) {
     $this->Connect();
-    session_name( $this["se.name"] );
+    session_name( $this["se.s"] );
     if( $s )
       session_start();
 

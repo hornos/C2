@@ -13,12 +13,12 @@ $cfg['db.attr'] = array();
 
 // session
 // $cfg['se.key']  = 'Yk9TwAtsdENc228aNec26ilaDhHcTZ8';
-$cfg['se.key'] = '';
-$cfg['se.name'] = 'XHJ3AJ7G';
-$cfg['se.x']    = 60000; // sec 3600
+$cfg['se.k'] = '';
+$cfg['se.s'] = 'XHJ3AJ7G';
+$cfg['se.x'] = 60000; // sec 3600
 
 // system
-$cfg['sys.ux']  = 60;  // sec
-$cfg['sys.mlt'] = 3;
+$cfg['sys.ux'] = 60;  // sec
+$cfg['sys.ml'] = 3;
 
 ?>
