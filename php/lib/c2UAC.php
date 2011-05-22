@@ -24,11 +24,16 @@ class c2UAC extends c2RPC {
       throw new c2Ex( 'Empty user!' );
     if( empty( $p ) )
       throw new c2Ex( 'Empty password!' );
-    return true;
+
+    $c2 = __k_fetch( 'c2' );
+    $se = new c2Sys( $c2['sys.c'] );
+    return $se->login( $u, $p );
   }
 
   protected function _rpc_logout() {
-    return true;
+    $c2 = __k_fetch( 'c2' );
+    $se = new c2Sys( $c2['sys.c'] );
+    return $se->logout();
   }
 
   public function rpc( $m = NULL, $a = NULL, $s = true ) {

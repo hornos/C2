@@ -22,7 +22,7 @@ function __k_obs() {
 
 function __k_obc() {
   if( C2_OB && ! C2_CLI )
-    ob_end_clean();
+    ob_clean();
 }
 
 function __k_obr( $obf = true ) {
@@ -56,6 +56,7 @@ function __k_prn( $s = '', $obc = true ) {
 function __k_json( $s = '', $t = 'e', $obc = C2_JSON_OBC ) {
   if( $obc )
     __k_obc();
+
   echo json_encode( array( 't' => $t, 'd' => $s ) );
 }
 
@@ -170,6 +171,49 @@ function __k_die( $s = '', $obc = true ) {
 function __k_exc( $e = NULL ) {
   __k_die( $e->getMessage() );
 }
+
+// http://php.net/manual/en/function.set-error-handler.php
+function __k_err( $errno = NULL, $errstr = NULL, $errfile = NULL, $errline = NULL ) {
+  if( ! ( error_reporting() & $errno ) ) {
+    // This error code is not included in error_reporting
+    return;
+  }
+
+  $m = "";
+  switch( $errno ) {
+    case E_USER_ERROR:
+      $m  = "Fatal error on line $errline in file $errfile\n";
+      $m .= "PHP " . PHP_VERSION . " (" . PHP_OS . ")\n";
+      $m .= "USER [$errno] $errstr\n";
+      __k_die( $m );
+      break;
+
+    case E_USER_WARNING:
+      __k_die( "WARNING [$errno] $errstr\n" );
+      break;
+
+    case E_USER_NOTICE:
+      __k_die( "NOTICE [$errno] $errstr\n" );
+      break;
+
+    default:
+      __k_die( "UNKNOWN [$errno] $errstr\n" );
+      break;
+  }
+  /* Don't execute PHP internal error handler */
+  return true;
+}
+
+// http://stackoverflow.com/questions/277224/how-do-i-catch-a-php-fatal-error
+function __k_sd() {
+  if( ( $e = error_get_last() ) ) {
+    $m  = 'Fatal error on line ' . $e['line'] . ' in file ' . $e['file'] . "\n";
+    $m .= "PHP " . PHP_VERSION . " (" . PHP_OS . ")\n";
+    $m .= $e['message'] . "\n";
+    ob_clean();
+    __k_die( $m );
+  }
+}
 // end Exception handling
 
 
@@ -184,12 +228,17 @@ function __k_init( $enc = 'UTF-8', $exc = NULL ) {
   __k_def( 'C2_EOL', C2_CLI ? PHP_EOL : '<br>'.PHP_EOL );
   __k_def( 'C2_MB', extension_loaded( 'mbstring' ) );
   __k_def( 'C2_TZ', 'CET' );
+  __k_def( 'C2_ERR', true );
   date_default_timezone_set( C2_TZ );
-
+  // encoding
   __k_obs();
   __k_enc( $enc );
-
-  // exception handling
+  // errors
+  if( C2_ERR ) {
+    register_shutdown_function( '__k_sd' );
+    set_error_handler( '__k_err' );
+  }
+  // exceptions
   if( function_exists( $exc ) )
     set_exception_handler( $exc );
 

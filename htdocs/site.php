@@ -1,3 +1,4 @@
+<!--TODO: auth-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +19,6 @@
   </div>
   <script>
     $('#logout').click( function() {
-      // TODO: button class 1-click protection
       _post( { 'c' : 'logout' }, _cb_logout );
       return true;
     });

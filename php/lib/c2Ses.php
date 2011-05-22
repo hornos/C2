@@ -269,6 +269,7 @@ class c2Ses extends c2PDB {
 
     return session_destroy();
   }
+
 }
 
 ?>

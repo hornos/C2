@@ -179,7 +179,7 @@ class c2PDB implements ArrayAccess {
     $p = __k_str( $p, C2_PDB_LENGTH );
 
     $q  = 'SELECT ' . c2Str::a2f( $f ) . ' FROM ' . $p;
-    $q .= '(' . coStr::a2f( $a, '', true ) . ')';
+    $q .= '(' . c2Str::a2f( $a, '', true ) . ')';
 
     return $this->Select( $q, $l, $o );
   }
