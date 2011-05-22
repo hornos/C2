@@ -1,6 +1,6 @@
 
 CREATE TABLE g (
-  id varchar(128) PRIMARY KEY NOT NULL DEFAULT 'users',
+  id varchar(128) PRIMARY KEY NOT NULL,
   v  bool NOT NULL DEFAULT 'f',
   vb int NOT NULL DEFAULT _time() CHECK ( vb  >= 0 ),
   ve int NOT NULL DEFAULT _sec( '3 years' ) CHECK ( vb >= 0 AND ve > vb ),

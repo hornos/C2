@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION g_v( _id varchar ) RETURNS bool AS $$
     _t   integer := _time();
     _tmp varchar := '';
   BEGIN
-    SELECT INTO _tmp g_id FROM g 
+    SELECT INTO _tmp id FROM g 
            WHERE v = 't' 
            AND id = _id 
            AND vb < _t 

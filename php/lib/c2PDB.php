@@ -117,7 +117,7 @@ class c2PDB implements ArrayAccess {
 
     $sm = $c->prepare( $q );
     if( ! $sm->execute() )
-      throw new c2Ex( __METHOD__ . " " . implode( ",", $sm->errorInfo() ) );
+      throw new c2Ex( __METHOD__ . "\n" . implode( ",", $sm->errorInfo() ) );
 
     // SELECT
     if( $s ) {
@@ -125,8 +125,8 @@ class c2PDB implements ArrayAccess {
       if( $ar < 1 )
         throw new c2Ex( __METHOD__ );
 
-      $sm->setFetchMode( PDO::FETCH_ASSOC ); 
-      $r = $sm->fetchAll(); 
+      $sm->setFetchMode( PDO::FETCH_ASSOC );
+      $r = $sm->fetchAll();
       if( ! $r )
         throw new c2Ex( __METHOD__ );
 
@@ -148,7 +148,7 @@ class c2PDB implements ArrayAccess {
   public function Select( $q = NULL, $l = C2_PDB_LIMIT, $o = 0 ) {
     $s  = ( $l > 0 ) ? ' LIMIT '  . $l  : '';
     $s .= ( $o > 0 ) ? ' OFFSET ' . $o : '';
-    return $this->_Query( $q . $s );
+    return $this->_Query( $q . $s, true );
   }
 
   public function Row( $q = NULL, $i = 0, $l = C2_PDB_LIMIT, $o = 0 ) {

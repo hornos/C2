@@ -28,6 +28,8 @@ function _cb_se( data, textStatus ) {
 }
 
 function _ex( d ) {
+  if( typeof( d ) == 'undefined' )
+    return false;
   if( d['t'] == 'e' ) {
     alert( d['d'] );
     return false;

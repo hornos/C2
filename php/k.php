@@ -14,10 +14,8 @@ function __k_obf() {
 }
 
 function __k_obs() {
-  if( C2_OB && ! C2_CLI ) {
-    if( ! ob_start( "ob_gzhandler" ) )
-      ob_start();
-  }
+  if( C2_OB && ! C2_CLI )
+    ob_start();
 }
 
 function __k_obc() {
@@ -179,25 +177,24 @@ function __k_err( $errno = NULL, $errstr = NULL, $errfile = NULL, $errline = NUL
     return;
   }
 
-  $m = "";
+  $m  = "Error on line $errline in file $errfile\n";
+  $m .= "PHP " . PHP_VERSION . " (" . PHP_OS . ")\n";
+
   switch( $errno ) {
     case E_USER_ERROR:
-      $m  = "Fatal error on line $errline in file $errfile\n";
-      $m .= "PHP " . PHP_VERSION . " (" . PHP_OS . ")\n";
-      $m .= "USER [$errno] $errstr\n";
-      __k_die( $m );
+      __k_die( $m . "USER [$errno] $errstr\n" );
       break;
 
     case E_USER_WARNING:
-      __k_die( "WARNING [$errno] $errstr\n" );
+      __k_die( $m . "WARNING [$errno] $errstr\n" );
       break;
 
     case E_USER_NOTICE:
-      __k_die( "NOTICE [$errno] $errstr\n" );
+      __k_die( $m . "NOTICE [$errno] $errstr\n" );
       break;
 
     default:
-      __k_die( "UNKNOWN [$errno] $errstr\n" );
+      __k_die( $m . "UNKNOWN [$errno] $errstr\n" );
       break;
   }
   /* Don't execute PHP internal error handler */
@@ -210,7 +207,6 @@ function __k_sd() {
     $m  = 'Fatal error on line ' . $e['line'] . ' in file ' . $e['file'] . "\n";
     $m .= "PHP " . PHP_VERSION . " (" . PHP_OS . ")\n";
     $m .= $e['message'] . "\n";
-    ob_clean();
     __k_die( $m );
   }
 }

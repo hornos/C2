@@ -14,7 +14,7 @@ class c2Enc {
   }
 
   public static function pas( $s = '' ) {
-    return sha1( $str );
+    return sha1( $s );
   }
 
   public static function des( $s = '', $sv = array( 0 ) , $ss = 0 ) {

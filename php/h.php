@@ -30,7 +30,8 @@ if( ! is_readable( $c2['path.c'] ) )
 require_once( $c2['path.c'] );
 
 // custom defines
-__k_def( 'C2_OB', false );
+__k_def( 'C2_OB', true );
+__k_def( 'C2_SYS_ERR', true );
 __k_init( 'UTF-8', '__k_exc' );
 __k_store( "c2", new c2( $c2, $cfg ) );
 // clean up

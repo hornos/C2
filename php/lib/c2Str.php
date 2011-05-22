@@ -80,7 +80,7 @@ class c2Str {
       return false;
 
     $s = self::trunc( self::alnum( $s ), 4 );
-    if( $str == 't' || $str == 'true' )
+    if( $s == 't' || $s == 'true' )
       return true;
 
     return false;
