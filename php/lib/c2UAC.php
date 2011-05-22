@@ -27,13 +27,26 @@ class c2UAC extends c2RPC {
 
     $c2 = __k_fetch( 'c2' );
     $se = new c2Sys( $c2['sys.c'] );
-    return $se->login( $u, $p );
+    $se->start();
+    try {
+      return $se->login( $u, $p );
+    } catch( Exception $e ) {
+      $se->stop( false );
+      throw $e;
+    }
   }
 
   protected function _rpc_logout() {
     $c2 = __k_fetch( 'c2' );
     $se = new c2Sys( $c2['sys.c'] );
-    return $se->logout();
+    $se->start();
+    try {
+      $se->logout();
+    } catch( Exception $e ) {
+      $se->stop( false );
+      throw $e;
+    }
+    return $se->stop( false );
   }
 
   public function rpc( $m = NULL, $a = NULL, $s = true ) {

@@ -1,6 +1,7 @@
 <?php
 require_once( "../php/h.php" );
 
+echo sha1('test');
 $c2 = __k_fetch( "c2" );
 #__k_r( $c2 );
 # $l = new c2Log( "test" );

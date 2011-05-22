@@ -49,14 +49,14 @@ class c2Sys extends c2Ses {
   protected function _u_cltr( $u = NULL ) {
     if( $this['sys.ml'] < 1 )
       return true;
-    if( $u['ltr'] > $this['sys.ml'] + 1 ) {
+    if( $u['ltr'] > $this['sys.ml'] - 1 ) {
       throw new c2Ex( __METHOD__ );
     }
     return true;
   }
 
   protected function _u_cgt( $u = NULL ) {
-    $dt = $this->_time - $lat = $u['lat'];
+    $dt = $this->_time - $u['lat'];
     if( $dt > $u['gt'] ) {
       return false;
     }
@@ -66,38 +66,37 @@ class c2Sys extends c2Ses {
   public function login( $u = NULL, $p = NULL ) {
     $this->Connect();
     // 1. valid
+    // TODO: read view
     try {
       $r = $this->_u_rd( $u );
     } catch( Exception $e ) {
-      throw new c2Ex( "Invalid user!" . ( C2_SYS_ERR ? "\n" . $e->getMessage() : "" )  );
+      throw new c2Ex( "Invalid user!" . ( C2_SYS_ERR ? "\n" . $e->getMessage() : "" ) );
     }
-    // 2. login tries
+    // 3. login tries
     try {
       $this->_u_cltr( $r );
     } catch( Exception $e ) {
-      throw new c2Ex( "Login tries exceeded!" );
+      throw new c2Ex( "Login tries exceeded!" . ( C2_SYS_ERR ? "\n" . $e->getMessage() : "" ) );
     }
-    // 3. online
+    // 2. online
     if( c2Str::tof( $r['o'] ) ) {
       // online, within grace
       if( $this->_u_cgt( $r ) )
-        return $this->_u_lat( $this->_time );
+        throw new c2Ex( "Online!" );
     }
-    // 4. new login
-    $this->start();
+    // 2. login
     try {
       $this->_u_login( $u, $p );
     } catch( Exception $e ) {
       $this->_u_iltr( $u );
-      throw new c2Ex( "Invalid password!" );
+      throw new c2Ex( "Invalid password!" . ( C2_SYS_ERR ? "\n" . $e->getMessage() : "" ) );
     }
     return $this->save( 'u', $u );
   }
 
   public function logout() {
     $this->Connect();
-    $this->start();
-    return $this->_logout( $this->load( 'u' ) );
+    $this->_u_logout( $this->load( 'u' ) );
   }
 }
 
